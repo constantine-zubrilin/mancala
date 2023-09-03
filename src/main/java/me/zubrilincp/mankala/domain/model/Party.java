@@ -30,11 +30,10 @@ public record Party(UUID id, PartyState state, Board board, Player playerTurn) {
 
   // TODO: tests for this method
   public Party makeMove(int pitIndex) {
-    List<Pit> pits = board.pits().stream()
-        .map(pit -> new Pit(pit.player(), pit.type(), pit.stones())).collect(Collectors.toList());
+    List<Pit> pits = board.pits();
 
     Pit startPit = pits.get(pitIndex);
-    int stones = startPit.stones();
+    int stonesInHand = startPit.stones();
     pits.set(pitIndex, new Pit(startPit.player(), startPit.type(), 0));
 
     do {
@@ -42,12 +41,13 @@ public record Party(UUID id, PartyState state, Board board, Player playerTurn) {
 
       Pit pit = pits.get(pitIndex);
       if (pit.type() == PitType.STORE && pit.player() != playerTurn) {
+        // Skip other player's STORE
         continue;
       }
 
       pits.set(pitIndex, new Pit(pit.player(), pit.type(), pit.stones() + 1));
-      stones--;
-    } while (stones > 0);
+      stonesInHand--;
+    } while (stonesInHand > 0);
 
     Player nextTurnPlayer = getNextTurnPlayer(pits, pitIndex);
     takeOppositeStones(pits, pitIndex);
@@ -59,7 +59,7 @@ public record Party(UUID id, PartyState state, Board board, Player playerTurn) {
   }
 
   /**
-   * Player can make move again if he ended on his store
+   * Player can make move again if they ended on his store
    */
   private Player getNextTurnPlayer(List<Pit> pits, int pitIndex) {
     if (pits.get(pitIndex).type() == PitType.STORE) {
@@ -69,16 +69,16 @@ public record Party(UUID id, PartyState state, Board board, Player playerTurn) {
   }
 
   /**
-   * Player take all stones from opposite pit if he ended on his empty pit
+   * Player take all stones from opposite pit if they ended on theirs empty pit
    */
   private void takeOppositeStones(List<Pit> pits, int pitIndex) {
     Pit lastPit = pits.get(pitIndex);
 
-    if (lastPit.type() == PitType.HOUSE && lastPit.stones() == 1) {
+    if (lastPit.player() == playerTurn && lastPit.type() == PitType.HOUSE && lastPit.stones() == 1) {
       int oppositePitIndex = pits.size() - pitIndex - 2;
       Pit oppositePit = pits.get(oppositePitIndex);
 
-      if (oppositePit.player() != playerTurn) {
+      if (oppositePit.player() != playerTurn && oppositePit.type() == PitType.HOUSE) {
         pits.set(pitIndex, new Pit(lastPit.player(), lastPit.type(), 0));
         pits.set(oppositePitIndex, new Pit(oppositePit.player(), oppositePit.type(), 0));
 

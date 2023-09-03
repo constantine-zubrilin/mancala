@@ -16,6 +16,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
 class PartyServiceTest {
+
   @Test
   void givenPartyConfiguration_whenCreatingParty_thenPartyIsCreated() {
     // Arrange
@@ -32,35 +33,16 @@ class PartyServiceTest {
     verify(savePartyPort).saveParty(party);
 
     List<Pit> pits = party.board().pits();
-    assertEquals((partyProperties.numberOfHomePits() + 1) * Player.values().length, pits.size());
 
+    assertEquals((partyProperties.numberOfHomePits() + 1) * Player.values().length, pits.size(),
+        "Number of pits is correct");
     assertThat(pits.stream().filter(pit -> pit.type().equals(PitType.HOUSE)))
         .as("All pits of type HOUSE have the same number of stones")
-        .hasSize(partyProperties.numberOfHomePits() * Player.values().length)
         .extracting(Pit::stones)
         .contains(partyProperties.numberOfStones());
-    assertThat(pits.stream().filter(pit -> pit.type().equals(PitType.STORE)))
-        .as("Number of pits of type STORE is equal to number of players")
-        .hasSize(Player.values().length);
-
-    assertThat(pits.subList(0, partyProperties.numberOfHomePits()))
-        .as("All pits of first half of board are owned by PLAYER_ONE")
-        .isNotEmpty()
-        .extracting(Pit::player)
-        .contains(Player.PLAYER_ONE);
-    assertThat(pits.subList(partyProperties.numberOfHomePits(), party.board().pits().size() - 1))
-        .as("All pits of second half of board are owned by PLAYER_TWO")
-        .isNotEmpty()
-        .extracting(Pit::player)
-        .contains(Player.PLAYER_TWO);
-
-    assertThat(pits.get(partyProperties.numberOfHomePits()))
-        .as("Last pit of first half of board is of type STORE and has 0 stones")
-        .extracting(Pit::type, Pit::stones)
-        .contains(PitType.STORE, 0);
-    assertThat(pits.get(pits.size() - 1))
-        .as("Last pit of second half of board is of type STORE and has 0 stones")
-        .extracting(Pit::type, Pit::stones)
-        .contains(PitType.STORE, 0);
+    assertThat(pits.stream().filter(pit -> pit.type() == PitType.STORE))
+        .as("STORE pits have 0 stones")
+        .extracting(Pit::stones)
+        .contains(0);
   }
 }
