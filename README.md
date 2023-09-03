@@ -1,1 +1,1 @@
-# mancala
+# Mankala
