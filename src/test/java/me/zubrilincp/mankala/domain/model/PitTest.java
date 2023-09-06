@@ -31,9 +31,11 @@ class PitTest {
     int stones = 4;
 
     // Act & Assert
-    assertThrowsExactly(IllegalPitArgumentException.class, () -> {
-      new Pit(null, type, stones);
-    });
+    assertThrowsExactly(
+        IllegalPitArgumentException.class,
+        () -> {
+          new Pit(null, type, stones);
+        });
   }
 
   @Test
@@ -43,9 +45,11 @@ class PitTest {
     int stones = 4;
 
     // Act & Assert
-    assertThrowsExactly(IllegalPitArgumentException.class, () -> {
-      new Pit(player, null, stones);
-    });
+    assertThrowsExactly(
+        IllegalPitArgumentException.class,
+        () -> {
+          new Pit(player, null, stones);
+        });
   }
 
   @Test
@@ -56,8 +60,10 @@ class PitTest {
     int stones = -1;
 
     // Act & Assert
-    assertThrowsExactly(IllegalPitArgumentException.class, () -> {
-      new Pit(player, type, stones);
-    });
+    assertThrowsExactly(
+        IllegalPitArgumentException.class,
+        () -> {
+          new Pit(player, type, stones);
+        });
   }
 }

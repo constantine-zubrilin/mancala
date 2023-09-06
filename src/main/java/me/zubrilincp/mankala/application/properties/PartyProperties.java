@@ -2,7 +2,6 @@ package me.zubrilincp.mankala.application.properties;
 
 import me.zubrilincp.mankala.domain.exception.validation.party.IllegalPartyPropertiesException;
 
-
 public record PartyProperties(int numberOfHomePits, int numberOfStones) {
 
   // TODO: add integration test

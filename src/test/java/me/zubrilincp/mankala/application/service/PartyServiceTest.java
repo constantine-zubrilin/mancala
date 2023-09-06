@@ -1,6 +1,5 @@
 package me.zubrilincp.mankala.application.service;
 
-
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.verify;
@@ -34,7 +33,9 @@ class PartyServiceTest {
 
     List<Pit> pits = party.board().pits();
 
-    assertEquals((partyProperties.numberOfHomePits() + 1) * Player.values().length, pits.size(),
+    assertEquals(
+        (partyProperties.numberOfHomePits() + 1) * Player.values().length,
+        pits.size(),
         "Number of pits is correct");
     assertThat(pits.stream().filter(pit -> pit.type().equals(PitType.HOUSE)))
         .as("All pits of type HOUSE have the same number of stones")

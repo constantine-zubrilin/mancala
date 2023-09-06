@@ -17,5 +17,4 @@ public record Pit(Player player, PitType type, int stones) {
       throw new IllegalPitArgumentException("stones cannot be negative");
     }
   }
-
 }

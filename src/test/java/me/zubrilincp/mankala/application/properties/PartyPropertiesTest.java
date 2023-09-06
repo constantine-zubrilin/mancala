@@ -15,10 +15,13 @@ class PartyPropertiesTest {
 
   @ParameterizedTest
   @ValueSource(ints = {-1, 0})
-  public void givenNonPositiveNumberOfHomePits_whenCreatingPartyProperties_thenIllegalPartyPropertiesExceptionIsThrown(int numberOfHomePits) {
+  public void
+      givenNonPositiveNumberOfHomePits_whenCreatingPartyProperties_thenIllegalPartyPropertiesExceptionIsThrown(
+          int numberOfHomePits) {
     // Arrange & Act
-    Throwable exception = assertThrows(IllegalPartyPropertiesException.class,
-        () -> new PartyProperties(numberOfHomePits, 1));
+    Throwable exception =
+        assertThrows(
+            IllegalPartyPropertiesException.class, () -> new PartyProperties(numberOfHomePits, 1));
 
     // Assert
     assertEquals("Number of home pits must be greater than 0", exception.getMessage());
@@ -26,10 +29,13 @@ class PartyPropertiesTest {
 
   @ParameterizedTest
   @ValueSource(ints = {-1, 0})
-  public void givenNonPositiveNumberOfStones_whenCreatingPartyProperties_thenIllegalPartyPropertiesExceptionIsThrown(int numberOfStones) {
+  public void
+      givenNonPositiveNumberOfStones_whenCreatingPartyProperties_thenIllegalPartyPropertiesExceptionIsThrown(
+          int numberOfStones) {
     // Arrange & Act
-    Throwable exception = assertThrows(IllegalPartyPropertiesException.class,
-        () -> new PartyProperties(1, numberOfStones));
+    Throwable exception =
+        assertThrows(
+            IllegalPartyPropertiesException.class, () -> new PartyProperties(1, numberOfStones));
 
     // Assert
     assertEquals("Number of stones must be greater than 0", exception.getMessage());

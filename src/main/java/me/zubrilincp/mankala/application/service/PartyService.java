@@ -33,15 +33,19 @@ public class PartyService implements NewPartyUseCase, PlayerMoveUseCase {
   // TODO: add documentation
   @Override
   public Party createParty() {
-    List pits = new ArrayList();
-    Arrays.stream(Player.values()).forEach(player -> {
-      for (int i = 0; i < partyProperties.numberOfHomePits(); i++) {
-        pits.add(new Pit(player, PitType.HOUSE, partyProperties.numberOfStones()));
-      }
-      pits.add(new Pit(player, PitType.STORE, 0));
-    });
+    List<Pit> pits = new ArrayList<>();
+    Arrays.stream(Player.values())
+        .forEach(
+            player -> {
+              for (int i = 0; i < partyProperties.numberOfHomePits(); i++) {
+                pits.add(new Pit(player, PitType.HOUSE, partyProperties.numberOfStones()));
+              }
+              pits.add(new Pit(player, PitType.STORE, 0));
+            });
 
-    Party party = new Party(UUID.randomUUID(), PartyState.IN_PROGRESS, new Board(pits), Player.PLAYER_ONE);
+    Party party =
+        new Party(
+            UUID.randomUUID(), PartyState.IN_PROGRESS, new Board(pits, null), Player.PLAYER_ONE);
     savePartyPort.saveParty(party);
 
     return party;
@@ -66,10 +70,12 @@ public class PartyService implements NewPartyUseCase, PlayerMoveUseCase {
       throw new InvalidPitOwnerException("Player cannot start move from this pit, it's not theirs");
     }
     if (party.board().pits().get(pitIndex).type() != PitType.HOUSE) {
-      throw new InvalidPitTypeException("Player cannot start move from this pit, it's not HOME pit");
+      throw new InvalidPitTypeException(
+          "Player cannot start move from this pit, it's not HOME pit");
     }
     if (party.board().pits().get(pitIndex).stones() <= 0) {
-      throw new InvalidPitStonesCountException("Player cannot start move from this pit, there is no stones");
+      throw new InvalidPitStonesCountException(
+          "Player cannot start move from this pit, there is no stones");
     }
     // TODO: check concurrency?
 
@@ -79,5 +85,4 @@ public class PartyService implements NewPartyUseCase, PlayerMoveUseCase {
 
     return partyAfterMove;
   }
-
 }

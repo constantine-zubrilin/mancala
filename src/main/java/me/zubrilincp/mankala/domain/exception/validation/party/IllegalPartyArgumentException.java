@@ -5,5 +5,4 @@ public class IllegalPartyArgumentException extends IllegalArgumentException {
   public IllegalPartyArgumentException(String s) {
     super(s);
   }
-
 }

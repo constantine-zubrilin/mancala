@@ -5,5 +5,4 @@ import me.zubrilincp.mankala.domain.model.Party;
 public interface SavePartyPort {
 
   Party saveParty(Party party);
-
 }
