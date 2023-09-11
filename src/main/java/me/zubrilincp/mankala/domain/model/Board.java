@@ -1,10 +1,17 @@
 package me.zubrilincp.mankala.domain.model;
 
+import java.util.Arrays;
+import java.util.EnumMap;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
 import me.zubrilincp.mankala.domain.commons.PitType;
 import me.zubrilincp.mankala.domain.commons.Player;
-import me.zubrilincp.mankala.domain.exception.BoardMovePitIndexOutOfBoundException;
+import me.zubrilincp.mankala.domain.exception.InvalidPitOwnerException;
+import me.zubrilincp.mankala.domain.exception.InvalidPitStonesCountException;
+import me.zubrilincp.mankala.domain.exception.InvalidPitTypeException;
+import me.zubrilincp.mankala.domain.exception.PitIndexOutOfBoundException;
 import me.zubrilincp.mankala.domain.exception.validation.board.IllegalBoardArgumentException;
 import me.zubrilincp.mankala.domain.exception.validation.board.InvalidPitsSetupException;
 
@@ -35,8 +42,7 @@ public record Board(List<Pit> pits, Integer lastUsedPitIndex) {
   }
 
   private void validatePits(List<Pit> pits, Player player) {
-    pits.stream()
-        .peek(
+    pits.forEach(
             pit -> {
               if (pit.player() != player) {
                 throw new InvalidPitsSetupException("Pits must be for the same player");
@@ -59,17 +65,27 @@ public record Board(List<Pit> pits, Integer lastUsedPitIndex) {
         .collect(Collectors.toList());
   }
 
-  public Board makeMove(int pitIndex) {
-    // todo: add test, verify that we need this check
+  public Board makeMove(Player player, int pitIndex) {
     if (pits.size() <= pitIndex || pitIndex < 0) {
-      throw new BoardMovePitIndexOutOfBoundException("Pit index is out of bounds");
+      throw new PitIndexOutOfBoundException("Pit index is out of bounds");
+    }
+    if (pits().get(pitIndex).player() != player) {
+      throw new InvalidPitOwnerException("Player cannot start move from this pit, it's not theirs");
+    }
+    if (pits().get(pitIndex).type() != PitType.HOUSE) {
+      throw new InvalidPitTypeException(
+          "Player cannot start move from this pit, it's not HOME pit");
+    }
+    if (pits().get(pitIndex).stones() <= 0) {
+      throw new InvalidPitStonesCountException(
+          "Player cannot start move from this pit, there is no stones");
     }
 
     List<Pit> pits = pits();
 
     Pit startPit = pits.get(pitIndex);
 
-    int stonesInHand = startPit.stones();
+    long stonesInHand = startPit.stones();
     pits.set(pitIndex, new Pit(startPit.player(), startPit.type(), 0));
 
     do {
@@ -90,6 +106,11 @@ public record Board(List<Pit> pits, Integer lastUsedPitIndex) {
         && lastUsedPit.type() == PitType.HOUSE
         && lastUsedPit.stones() == 1) {
       pits = takeOppositeStones(pits, pitIndex);
+    }
+
+    if (noStonesInPlayerHouses(pits, Player.PLAYER_ONE)
+        || noStonesInPlayerHouses(pits, Player.PLAYER_TWO)) {
+      pits = putPlayerStonesInStore(pits);
     }
 
     return new Board(pits, pitIndex);
@@ -127,5 +148,28 @@ public record Board(List<Pit> pits, Integer lastUsedPitIndex) {
     }
 
     return pits;
+  }
+
+  private boolean noStonesInPlayerHouses(List<Pit> pits, Player player) {
+    return pits.stream()
+        .noneMatch(
+            pit -> pit.player() == player && pit.type() == PitType.HOUSE && pit.stones() > 0);
+  }
+
+  private List<Pit> putPlayerStonesInStore(List<Pit> pits) {
+    Map<Player, AtomicLong> stonesCount = new EnumMap<>(Player.class);
+    Arrays.stream(Player.values()).forEach(player -> stonesCount.put(player, new AtomicLong(0)));
+    pits.forEach(pit -> stonesCount.get(pit.player()).addAndGet(pit.stones()));
+
+    return pits.stream()
+        .map(
+            pit -> {
+              if (pit.type() == PitType.STORE) {
+                return new Pit(pit.player(), pit.type(), stonesCount.get(pit.player()).longValue());
+              } else {
+                return new Pit(pit.player(), pit.type(), 0);
+              }
+            })
+        .collect(Collectors.toList());
   }
 }

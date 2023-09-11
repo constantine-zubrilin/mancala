@@ -13,12 +13,6 @@ import me.zubrilincp.mankala.application.properties.PartyProperties;
 import me.zubrilincp.mankala.domain.commons.PartyState;
 import me.zubrilincp.mankala.domain.commons.PitType;
 import me.zubrilincp.mankala.domain.commons.Player;
-import me.zubrilincp.mankala.domain.exception.InvalidPitIndexException;
-import me.zubrilincp.mankala.domain.exception.InvalidPitOwnerException;
-import me.zubrilincp.mankala.domain.exception.InvalidPitStonesCountException;
-import me.zubrilincp.mankala.domain.exception.InvalidPitTypeException;
-import me.zubrilincp.mankala.domain.exception.InvalidPlayerTurnException;
-import me.zubrilincp.mankala.domain.exception.PartyIsNotInProgressException;
 import me.zubrilincp.mankala.domain.model.Board;
 import me.zubrilincp.mankala.domain.model.Party;
 import me.zubrilincp.mankala.domain.model.Pit;
@@ -52,34 +46,12 @@ public class PartyService implements NewPartyUseCase, PlayerMoveUseCase {
   }
 
   @Override
-  // TODO: tests for this method
   public Party playerMove(UUID partyId, Player player, int pitIndex) {
     Party party = loadPartyPort.loadParty(partyId);
 
-    // Validate business rules
-    if (party.state() != PartyState.IN_PROGRESS) {
-      throw new PartyIsNotInProgressException("Party is not in progress");
-    }
-    if (party.playerTurn() != player) {
-      throw new InvalidPlayerTurnException("Player cannot move, it's not theirs turn");
-    }
-    if (pitIndex <= 0 || pitIndex >= party.board().pits().size() - 1) {
-      throw new InvalidPitIndexException("Index must exist on the board");
-    }
-    if (party.board().pits().get(pitIndex).player() != player) {
-      throw new InvalidPitOwnerException("Player cannot start move from this pit, it's not theirs");
-    }
-    if (party.board().pits().get(pitIndex).type() != PitType.HOUSE) {
-      throw new InvalidPitTypeException(
-          "Player cannot start move from this pit, it's not HOME pit");
-    }
-    if (party.board().pits().get(pitIndex).stones() <= 0) {
-      throw new InvalidPitStonesCountException(
-          "Player cannot start move from this pit, there is no stones");
-    }
     // TODO: check concurrency?
 
-    Party partyAfterMove = party.makeMove(pitIndex);
+    Party partyAfterMove = party.makeMove(player, pitIndex);
 
     this.savePartyPort.saveParty(partyAfterMove);
 

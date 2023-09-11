@@ -4,7 +4,7 @@ import me.zubrilincp.mankala.domain.commons.PitType;
 import me.zubrilincp.mankala.domain.commons.Player;
 import me.zubrilincp.mankala.domain.exception.validation.pit.IllegalPitArgumentException;
 
-public record Pit(Player player, PitType type, int stones) {
+public record Pit(Player player, PitType type, long stones) {
 
   public Pit {
     if (player == null) {
