@@ -11,7 +11,6 @@ public class PartyProperties {
   private long numberOfHomePits;
   private long initialNumberOfStonesPerPit;
 
-  // TODO: add integration test
   public PartyProperties(long numberOfHomePits, long initialNumberOfStonesPerPit) {
     if (numberOfHomePits < 1) {
       throw new IllegalPartyPropertiesException("Number of home pits must be greater than 0");

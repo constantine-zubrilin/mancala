@@ -26,9 +26,10 @@ class PartyTest {
     PartyState state = PartyState.IN_PROGRESS;
     Board board = aBoard();
     Player playerTurn = Player.PLAYER_ONE;
+    int version = 0;
 
     // Act & Assert
-    assertDoesNotThrow(() -> new Party(id, state, board, playerTurn));
+    assertDoesNotThrow(() -> new Party(id, state, board, playerTurn, version));
   }
 
   @Test
@@ -37,11 +38,13 @@ class PartyTest {
     PartyState state = PartyState.IN_PROGRESS;
     Board board = aBoard();
     Player playerTurn = Player.PLAYER_ONE;
+    int version = 0;
 
     // Act
     Throwable exception =
         assertThrowsExactly(
-            IllegalPartyArgumentException.class, () -> new Party(null, state, board, playerTurn));
+            IllegalPartyArgumentException.class,
+            () -> new Party(null, state, board, playerTurn, version));
 
     // Assert
     assertEquals("id cannot be null", exception.getMessage());
@@ -53,11 +56,13 @@ class PartyTest {
     UUID id = UUID.randomUUID();
     Board board = aBoard();
     Player playerTurn = Player.PLAYER_ONE;
+    int version = 0;
 
     // Act
     Throwable exception =
         assertThrowsExactly(
-            IllegalPartyArgumentException.class, () -> new Party(id, null, board, playerTurn));
+            IllegalPartyArgumentException.class,
+            () -> new Party(id, null, board, playerTurn, version));
 
     // Assert
     assertEquals("state cannot be null", exception.getMessage());
@@ -69,11 +74,13 @@ class PartyTest {
     UUID id = UUID.randomUUID();
     PartyState state = PartyState.IN_PROGRESS;
     Player playerTurn = Player.PLAYER_ONE;
+    int version = 0;
 
     // Act
     Throwable exception =
         assertThrowsExactly(
-            IllegalPartyArgumentException.class, () -> new Party(id, state, null, playerTurn));
+            IllegalPartyArgumentException.class,
+            () -> new Party(id, state, null, playerTurn, version));
 
     // Assert
     assertEquals("board cannot be null", exception.getMessage());
@@ -85,11 +92,12 @@ class PartyTest {
     UUID id = UUID.randomUUID();
     PartyState state = PartyState.IN_PROGRESS;
     Board board = aBoard();
+    int version = 0;
 
     // Act
     Throwable exception =
         assertThrowsExactly(
-            IllegalPartyArgumentException.class, () -> new Party(id, state, board, null));
+            IllegalPartyArgumentException.class, () -> new Party(id, state, board, null, version));
 
     // Assert
     assertEquals("player turn cannot be null", exception.getMessage());
@@ -106,8 +114,10 @@ class PartyTest {
     pits.add(new Pit(Player.PLAYER_TWO, PitType.HOUSE, 2));
     pits.add(new Pit(Player.PLAYER_TWO, PitType.STORE, 0));
     when(board.makeMove(Player.PLAYER_ONE, 0)).thenReturn(new Board(pits, 2));
+    int version = 0;
 
-    Party party = new Party(UUID.randomUUID(), PartyState.IN_PROGRESS, board, Player.PLAYER_ONE);
+    Party party =
+        new Party(UUID.randomUUID(), PartyState.IN_PROGRESS, board, Player.PLAYER_ONE, version);
 
     // Act
     Party newParty = party.makeMove(party.playerTurn(), 0);
@@ -128,7 +138,7 @@ class PartyTest {
     pits.add(new Pit(Player.PLAYER_TWO, PitType.STORE, 0));
 
     Board board = new Board(pits, null);
-    Party party = new Party(UUID.randomUUID(), PartyState.IN_PROGRESS, board, Player.PLAYER_ONE);
+    Party party = new Party(UUID.randomUUID(), PartyState.IN_PROGRESS, board, Player.PLAYER_ONE, 0);
 
     // Act
     Party newParty = party.makeMove(party.playerTurn(), 0);
@@ -151,7 +161,7 @@ class PartyTest {
     pits.add(new Pit(Player.PLAYER_TWO, PitType.STORE, 0));
 
     Board board = new Board(pits, null);
-    Party party = new Party(UUID.randomUUID(), PartyState.IN_PROGRESS, board, Player.PLAYER_ONE);
+    Party party = new Party(UUID.randomUUID(), PartyState.IN_PROGRESS, board, Player.PLAYER_ONE, 0);
 
     // Act
     Party newParty = party.makeMove(party.playerTurn(), 1);
@@ -173,7 +183,7 @@ class PartyTest {
     pits.add(new Pit(Player.PLAYER_TWO, PitType.STORE, 0));
 
     Board board = new Board(pits, null);
-    Party party = new Party(UUID.randomUUID(), PartyState.IN_PROGRESS, board, Player.PLAYER_ONE);
+    Party party = new Party(UUID.randomUUID(), PartyState.IN_PROGRESS, board, Player.PLAYER_ONE, 0);
 
     // Act
     Party newParty = party.makeMove(party.playerTurn(), 1);
@@ -191,7 +201,7 @@ class PartyTest {
   void givenPartyNotInProgressState_whenMakingMove_thenPartyIsNotInProgressExceptionIsThrown(
       PartyState partyState) {
     // Arrange
-    Party party = new Party(UUID.randomUUID(), partyState, aBoard(), Player.PLAYER_ONE);
+    Party party = new Party(UUID.randomUUID(), partyState, aBoard(), Player.PLAYER_ONE, 0);
 
     // Act
     Throwable exception =
@@ -205,7 +215,8 @@ class PartyTest {
   @Test
   void givenPartyWithPlayerOneTurn_whenPlayerTwoMakeMove_thenInvalidPlayerTurnExceptionIsThrown() {
     // Arrange
-    Party party = new Party(UUID.randomUUID(), PartyState.IN_PROGRESS, aBoard(), Player.PLAYER_ONE);
+    Party party =
+        new Party(UUID.randomUUID(), PartyState.IN_PROGRESS, aBoard(), Player.PLAYER_ONE, 0);
 
     // Act
     Throwable exception =

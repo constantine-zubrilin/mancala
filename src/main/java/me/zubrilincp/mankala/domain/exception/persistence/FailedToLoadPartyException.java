@@ -5,5 +5,4 @@ public class FailedToLoadPartyException extends RuntimeException {
   public FailedToLoadPartyException(String message, Throwable cause) {
     super(message, cause);
   }
-
 }

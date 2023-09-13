@@ -3,7 +3,7 @@ package me.zubrilincp.mankala.adapter.in.web;
 import java.util.UUID;
 import lombok.AllArgsConstructor;
 import me.zubrilincp.mankala.adapter.in.web.request.PlayerMoveRequest;
-import me.zubrilincp.mankala.application.port.in.CreatePartyUseCase;
+import me.zubrilincp.mankala.application.port.in.ManagePartyUseCase;
 import me.zubrilincp.mankala.application.port.in.PlayerMoveUseCase;
 import me.zubrilincp.mankala.domain.exception.InvalidPitOwnerException;
 import me.zubrilincp.mankala.domain.exception.persistence.PartyNotFoundException;
@@ -11,6 +11,7 @@ import me.zubrilincp.mankala.domain.model.Party;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -26,10 +27,9 @@ import org.springframework.web.server.ResponseStatusException;
     produces = {MediaType.APPLICATION_JSON_VALUE})
 // TODO: add openapi documentation
 @AllArgsConstructor
-// TODO: add integration tests
 public class PartyController {
 
-  private final CreatePartyUseCase createPartyUseCase;
+  private final ManagePartyUseCase managePartyUseCase;
   private final PlayerMoveUseCase playerMoveUseCase;
 
   @PostMapping
@@ -37,21 +37,34 @@ public class PartyController {
   @ResponseBody
   ResponseEntity<Party> createParty() {
     try {
-      return new ResponseEntity<>(createPartyUseCase.createParty(), HttpStatus.CREATED);
+      return new ResponseEntity<>(managePartyUseCase.createParty(), HttpStatus.CREATED);
+    } catch (Exception e) {
+      throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(), e);
+    }
+  }
+
+  @GetMapping("/{partyId}")
+  @ResponseStatus(HttpStatus.OK)
+  @ResponseBody
+  ResponseEntity<Party> findParty(@PathVariable UUID partyId) {
+    try {
+      return new ResponseEntity<>(managePartyUseCase.findParty(partyId), HttpStatus.OK);
+    } catch (PartyNotFoundException e) {
+      throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
     } catch (Exception e) {
       throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(), e);
     }
   }
 
   @PostMapping("/{partyId}/move")
-  @ResponseStatus(HttpStatus.CREATED)
+  @ResponseStatus(HttpStatus.OK)
   @ResponseBody
   ResponseEntity<Party> playerMove(
-      @PathVariable UUID partyId,
-      @RequestBody PlayerMoveRequest playerMoveRequest) {
+      @PathVariable UUID partyId, @RequestBody PlayerMoveRequest playerMoveRequest) {
     try {
-      return new ResponseEntity<>(playerMoveUseCase.playerMove(partyId,
-          playerMoveRequest.player(), playerMoveRequest.pitIndex()),
+      return new ResponseEntity<>(
+          playerMoveUseCase.playerMove(
+              partyId, playerMoveRequest.player(), playerMoveRequest.pitIndex()),
           HttpStatus.OK);
     } catch (PartyNotFoundException e) {
       throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
@@ -61,5 +74,4 @@ public class PartyController {
       throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(), e);
     }
   }
-
 }

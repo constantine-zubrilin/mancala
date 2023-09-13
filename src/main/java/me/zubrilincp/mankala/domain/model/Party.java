@@ -8,8 +8,7 @@ import me.zubrilincp.mankala.domain.exception.InvalidPlayerTurnException;
 import me.zubrilincp.mankala.domain.exception.PartyIsNotInProgressException;
 import me.zubrilincp.mankala.domain.exception.validation.party.IllegalPartyArgumentException;
 
-// TODO: add move number with optimistic lock to prevent collisions
-public record Party(UUID id, PartyState state, Board board, Player playerTurn) {
+public record Party(UUID id, PartyState state, Board board, Player playerTurn, int version) {
 
   public Party {
     if (id == null) {
@@ -39,7 +38,7 @@ public record Party(UUID id, PartyState state, Board board, Player playerTurn) {
     Player nextTurnPlayer = getNextTurnPlayer(updatedBoard.lastUsedPit());
     PartyState partyState = noStonesInHouses(updatedBoard) ? PartyState.FINISHED : state();
 
-    return new Party(id, partyState, updatedBoard, nextTurnPlayer);
+    return new Party(id, partyState, updatedBoard, nextTurnPlayer, version);
   }
 
   /** Player can make move again if they ended on his store */

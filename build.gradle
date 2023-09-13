@@ -31,6 +31,8 @@ dependencies {
     annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
     annotationProcessor 'org.projectlombok:lombok'
     testImplementation 'org.springframework.boot:spring-boot-starter-test:3.1.0'
+    testImplementation 'org.testcontainers:postgresql:1.18.3'
+    testImplementation 'org.testcontainers:junit-jupiter:1.18.3'
 }
 
 spotless {
@@ -39,6 +41,42 @@ spotless {
     }
 }
 
+sourceSets {
+    testIntegration {
+        compileClasspath += main.output + test.output
+        runtimeClasspath += main.output + test.output
+    }
+    testSystem {
+        compileClasspath += main.output + test.output
+        runtimeClasspath += main.output + test.output
+    }
+}
+
+task testIntegration(type: Test) {
+    group = "verification"
+    testClassesDirs = sourceSets.testIntegration.output.classesDirs
+    classpath = sourceSets.testIntegration.runtimeClasspath
+    useJUnitPlatform()
+}
+
+task testSystem(type: Test) {
+    group = "verification"
+    testClassesDirs = sourceSets.testSystem.output.classesDirs
+    classpath = sourceSets.testSystem.runtimeClasspath
+    useJUnitPlatform()
+}
+
+configurations {
+    testIntegrationImplementation.extendsFrom(testImplementation)
+    testIntegrationRuntimeOnly.extendsFrom(testRuntimeOnly)
+    testSystemImplementation.extendsFrom(testImplementation)
+    testSystemRuntimeOnly.extendsFrom(testRuntimeOnly)
+}
+
 tasks.named('test') {
     useJUnitPlatform()
+}
+tasks.named('check') {
+    dependsOn(testIntegration)
+    dependsOn(testSystem)
 }

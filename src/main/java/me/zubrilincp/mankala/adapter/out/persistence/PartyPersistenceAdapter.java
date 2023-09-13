@@ -32,7 +32,7 @@ public class PartyPersistenceAdapter implements LoadPartyPort, SavePartyPort {
   @Override
   public Party saveParty(Party party) {
     try {
-      PartyEntity savedPartyEntity = partyRepository.save(new PartyEntity(party));
+      PartyEntity savedPartyEntity = partyRepository.saveAndFlush(new PartyEntity(party));
       return savedPartyEntity.toParty();
     } catch (Exception e) {
       throw new FailedToSavePartyException("Failed to save party exception", e);

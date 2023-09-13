@@ -2,7 +2,7 @@ package me.zubrilincp.mankala.adapter.config;
 
 import me.zubrilincp.mankala.adapter.out.persistence.PartyPersistenceAdapter;
 import me.zubrilincp.mankala.adapter.out.persistence.repository.PartyRepository;
-import me.zubrilincp.mankala.application.port.in.CreatePartyUseCase;
+import me.zubrilincp.mankala.application.port.in.ManagePartyUseCase;
 import me.zubrilincp.mankala.application.port.in.PlayerMoveUseCase;
 import me.zubrilincp.mankala.application.port.out.persistence.LoadPartyPort;
 import me.zubrilincp.mankala.application.port.out.persistence.SavePartyPort;
@@ -25,7 +25,7 @@ public class BeanConfiguration {
   }
 
   @Bean
-  public CreatePartyUseCase createPartyUseCase(
+  public ManagePartyUseCase managePartyUseCase(
       PartyProperties partyProperties, SavePartyPort savePartyPort, LoadPartyPort loadPartyPort) {
     return new PartyService(partyProperties, savePartyPort, loadPartyPort);
   }

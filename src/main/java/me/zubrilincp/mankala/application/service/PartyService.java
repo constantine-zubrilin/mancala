@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.UUID;
 import lombok.AllArgsConstructor;
 import me.zubrilincp.mankala.adapter.config.PartyProperties;
-import me.zubrilincp.mankala.application.port.in.CreatePartyUseCase;
+import me.zubrilincp.mankala.application.port.in.ManagePartyUseCase;
 import me.zubrilincp.mankala.application.port.in.PlayerMoveUseCase;
 import me.zubrilincp.mankala.application.port.out.persistence.LoadPartyPort;
 import me.zubrilincp.mankala.application.port.out.persistence.SavePartyPort;
@@ -19,7 +19,7 @@ import me.zubrilincp.mankala.domain.model.Pit;
 import org.springframework.transaction.annotation.Transactional;
 
 @AllArgsConstructor
-public class PartyService implements CreatePartyUseCase, PlayerMoveUseCase {
+public class PartyService implements ManagePartyUseCase, PlayerMoveUseCase {
 
   private final PartyProperties partyProperties;
   private final SavePartyPort savePartyPort;
@@ -41,19 +41,20 @@ public class PartyService implements CreatePartyUseCase, PlayerMoveUseCase {
 
     Party party =
         new Party(
-            UUID.randomUUID(), PartyState.IN_PROGRESS, new Board(pits, null), Player.PLAYER_ONE);
+            UUID.randomUUID(), PartyState.IN_PROGRESS, new Board(pits, null), Player.PLAYER_ONE, 0);
     return savePartyPort.saveParty(party);
+  }
+
+  @Override
+  public Party findParty(UUID partyId) {
+    return loadPartyPort.loadParty(partyId);
   }
 
   @Override
   @Transactional
   public Party playerMove(UUID partyId, Player player, int pitIndex) {
     Party party = loadPartyPort.loadParty(partyId);
-
-    // TODO: check concurrency?
-
     Party partyAfterMove = party.makeMove(player, pitIndex);
-
     return this.savePartyPort.saveParty(partyAfterMove);
   }
 }
