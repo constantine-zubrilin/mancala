@@ -43,11 +43,11 @@ public record Board(List<Pit> pits, Integer lastUsedPitIndex) {
 
   private void validatePits(List<Pit> pits, Player player) {
     pits.forEach(
-            pit -> {
-              if (pit.player() != player) {
-                throw new InvalidPitsSetupException("Pits must be for the same player");
-              }
-            });
+        pit -> {
+          if (pit.player() != player) {
+            throw new InvalidPitsSetupException("Pits must be for the same player");
+          }
+        });
     if (pits.stream().filter(pit -> pit.type() == PitType.STORE).count() != 1) {
       throw new InvalidPitsSetupException("Pits must have 1 store pit for each player");
     }

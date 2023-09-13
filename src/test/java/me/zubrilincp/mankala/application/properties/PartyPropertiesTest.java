@@ -2,6 +2,7 @@ package me.zubrilincp.mankala.application.properties;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import me.zubrilincp.mankala.adapter.config.PartyProperties;
 import me.zubrilincp.mankala.domain.exception.validation.party.IllegalPartyPropertiesException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
