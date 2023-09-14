@@ -1,31 +1,31 @@
 version: '2'
 
 services:
-#  frontend:
-#    image: nginx
-#    restart: no
-#    container_name: mankala-frontend
-#    depends_on:
-#      - backend
-#    ports:
-#      - "3000:80"
-#    volumes:
-#      - ./web-client/build:/usr/share/nginx/html
-#  backend:
-#    image: 'docker-spring-boot-postgres:latest'
-#    restart: no
-#    build:
-#      context: .
-#    container_name: mankala-backend
-#    depends_on:
-#      - db
-#    environment:
-#      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/postgres
-#      - SPRING_DATASOURCE_USERNAME=postgres
-#      - SPRING_DATASOURCE_PASSWORD=postgres
-#      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
-#    ports:
-#      - "8080:8080"
+  frontend:
+    image: nginx
+    restart: no
+    container_name: mankala-frontend
+    depends_on:
+      - backend
+    ports:
+      - "3000:80"
+    volumes:
+      - ./web-client/build:/usr/share/nginx/html
+  backend:
+    image: 'docker-spring-boot-postgres:latest'
+    restart: no
+    build:
+      context: .
+    container_name: mankala-backend
+    depends_on:
+      - db
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/postgres
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=postgres
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+    ports:
+      - "8080:8080"
   db:
     image: 'postgres:13.1-alpine'
     container_name: mankala-db

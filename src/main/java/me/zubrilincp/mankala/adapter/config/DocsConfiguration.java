@@ -16,17 +16,18 @@ import org.springframework.context.annotation.Configuration;
 public class DocsConfiguration {
   @Bean
   public OpenAPI customOpenAPI() {
-    Schema errorResponseSchema = new Schema<Map<String, Object>>()
-        .addProperties("timestamp", new DateTimeSchema().example("2020-12-26T19:39:11.426+00:00"))
-        .addProperties("status", new IntegerSchema().example(404))
-        .addProperties("error", new StringSchema().example("Not Found"))
-        .addProperties("message", new StringSchema().example("Party not found"))
-        .addProperties("path",
-            new StringSchema().example("/api/v1/party/a158f9cc-fcd7-4364-ac7e-075862ba9841"));
+    Schema errorResponseSchema =
+        new Schema<Map<String, Object>>()
+            .addProperty(
+                "timestamp", new DateTimeSchema().example("2020-12-26T19:39:11.426+00:00"))
+            .addProperty("status", new IntegerSchema().example(404))
+            .addProperty("error", new StringSchema().example("Not Found"))
+            .addProperty("message", new StringSchema().example("Party not found"))
+            .addProperty(
+                "path",
+                new StringSchema().example("/api/v1/party/a158f9cc-fcd7-4364-ac7e-075862ba9841"));
 
     return new OpenAPI()
-        .components(new Components()
-            .addSchemas("ErrorResponseSchema", errorResponseSchema)
-        );
+        .components(new Components().addSchemas("ErrorResponseSchema", errorResponseSchema));
   }
 }

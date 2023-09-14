@@ -37,10 +37,17 @@ public class PartyController {
   private final PlayerMoveUseCase playerMoveUseCase;
 
   @Operation(summary = "Create new game party")
-  @ApiResponses(value = {
-      @ApiResponse(responseCode = "201", description = "Party created",
-          content = { @Content(mediaType = "application/json",
-              schema = @Schema(implementation = Party.class)) }) })
+  @ApiResponses(
+      value = {
+        @ApiResponse(
+            responseCode = "201",
+            description = "Party created",
+            content = {
+              @Content(
+                  mediaType = "application/json",
+                  schema = @Schema(implementation = Party.class))
+            })
+      })
   @PostMapping
   @ResponseStatus(HttpStatus.CREATED)
   @ResponseBody
@@ -53,13 +60,25 @@ public class PartyController {
   }
 
   @Operation(summary = "Fetch game party by id")
-  @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Found party",
-          content = { @Content(mediaType = "application/json",
-              schema = @Schema(implementation = Party.class)) }),
-      @ApiResponse(responseCode = "404", description = "Party not found",
-          content = {@Content(mediaType = "application/json",
-          schema = @Schema(ref = "ErrorResponseSchema"))}) })
+  @ApiResponses(
+      value = {
+        @ApiResponse(
+            responseCode = "200",
+            description = "Found party",
+            content = {
+              @Content(
+                  mediaType = "application/json",
+                  schema = @Schema(implementation = Party.class))
+            }),
+        @ApiResponse(
+            responseCode = "404",
+            description = "Party not found",
+            content = {
+              @Content(
+                  mediaType = "application/json",
+                  schema = @Schema(ref = "ErrorResponseSchema"))
+            })
+      })
   @GetMapping("/{partyId}")
   @ResponseStatus(HttpStatus.OK)
   @ResponseBody
@@ -74,16 +93,33 @@ public class PartyController {
   }
 
   @Operation(summary = "Make a move in game party")
-  @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Move made",
-          content = { @Content(mediaType = "application/json",
-              schema = @Schema(implementation = Party.class)) }),
-      @ApiResponse(responseCode = "403", description = "Move forbidden",
-          content = {@Content(mediaType = "application/json",
-              schema = @Schema(ref = "ErrorResponseSchema"))}),
-      @ApiResponse(responseCode = "404", description = "Party not found",
-          content = {@Content(mediaType = "application/json",
-              schema = @Schema(ref = "ErrorResponseSchema"))}) })
+  @ApiResponses(
+      value = {
+        @ApiResponse(
+            responseCode = "200",
+            description = "Move made",
+            content = {
+              @Content(
+                  mediaType = "application/json",
+                  schema = @Schema(implementation = Party.class))
+            }),
+        @ApiResponse(
+            responseCode = "403",
+            description = "Move forbidden",
+            content = {
+              @Content(
+                  mediaType = "application/json",
+                  schema = @Schema(ref = "ErrorResponseSchema"))
+            }),
+        @ApiResponse(
+            responseCode = "404",
+            description = "Party not found",
+            content = {
+              @Content(
+                  mediaType = "application/json",
+                  schema = @Schema(ref = "ErrorResponseSchema"))
+            })
+      })
   @PostMapping("/{partyId}/move")
   @ResponseStatus(HttpStatus.OK)
   @ResponseBody
