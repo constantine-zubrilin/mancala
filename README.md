@@ -20,7 +20,7 @@ board. The player with the most stones in their store wins.
 
 ## Issues
 
-1. I failed to build web client in the container. So I had to add build client to the repository.
+1. I failed to build web client in the container. So I had to add client build to the repository.
 It's a bad practice and has to be fixed.
 2. Web client is hideous inside.
 3. Real name is Mancala, but I made a misprint in the beginning, and now I think it looks better
