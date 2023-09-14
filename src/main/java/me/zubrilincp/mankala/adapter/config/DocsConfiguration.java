@@ -18,8 +18,7 @@ public class DocsConfiguration {
   public OpenAPI customOpenAPI() {
     Schema errorResponseSchema =
         new Schema<Map<String, Object>>()
-            .addProperty(
-                "timestamp", new DateTimeSchema().example("2020-12-26T19:39:11.426+00:00"))
+            .addProperty("timestamp", new DateTimeSchema().example("2020-12-26T19:39:11.426+00:00"))
             .addProperty("status", new IntegerSchema().example(404))
             .addProperty("error", new StringSchema().example("Not Found"))
             .addProperty("message", new StringSchema().example("Party not found"))
