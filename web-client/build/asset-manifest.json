@@ -1,0 +1,16 @@
+{
+  "files": {
+    "main.css": "/static/css/main.d68c0218.css",
+    "main.js": "/static/js/main.f8368c6e.js",
+    "static/media/BlenderProBook.woff2": "/static/media/BlenderProBook.a6763c9ac303d2594633.woff2",
+    "static/media/Cyberpunk.otf": "/static/media/Cyberpunk.0c742b6989b2dc04f6c3.otf",
+    "static/media/Oxanium.woff2": "/static/media/Oxanium.9d0ec1d9a8ace5700975.woff2",
+    "index.html": "/index.html",
+    "main.d68c0218.css.map": "/static/css/main.d68c0218.css.map",
+    "main.f8368c6e.js.map": "/static/js/main.f8368c6e.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.d68c0218.css",
+    "static/js/main.f8368c6e.js"
+  ]
+}

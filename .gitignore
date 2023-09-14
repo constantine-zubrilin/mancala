@@ -1,8 +1,10 @@
 .gradle
-build/
+/build/
 !gradle/wrapper/gradle-wrapper.jar
 !**/src/main/**/build/
 !**/src/test/**/build/
+!**/src/testIntegration/**/build/
+!**/src/testSystem/**/build/
 
 ### STS ###
 .apt_generated

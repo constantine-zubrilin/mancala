@@ -25,7 +25,6 @@ public class PartyService implements ManagePartyUseCase, PlayerMoveUseCase {
   private final SavePartyPort savePartyPort;
   private final LoadPartyPort loadPartyPort;
 
-  // TODO: add documentation
   @Override
   @Transactional
   public Party createParty() {
@@ -34,7 +33,9 @@ public class PartyService implements ManagePartyUseCase, PlayerMoveUseCase {
         .forEach(
             player -> {
               for (int i = 0; i < partyProperties.getNumberOfHomePits(); i++) {
-                pits.add(new Pit(player, PitType.HOUSE, partyProperties.getNumberOfHomePits()));
+                pits.add(
+                    new Pit(
+                        player, PitType.HOUSE, partyProperties.getInitialNumberOfStonesPerPit()));
               }
               pits.add(new Pit(player, PitType.STORE, 0));
             });

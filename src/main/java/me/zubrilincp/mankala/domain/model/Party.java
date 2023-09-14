@@ -25,7 +25,6 @@ public record Party(UUID id, PartyState state, Board board, Player playerTurn, i
     }
   }
 
-  // TODO: comments
   public Party makeMove(Player player, int pitIndex) {
     if (state() != PartyState.IN_PROGRESS) {
       throw new PartyIsNotInProgressException("Party is not in progress");
@@ -36,7 +35,7 @@ public record Party(UUID id, PartyState state, Board board, Player playerTurn, i
 
     Board updatedBoard = board.makeMove(player, pitIndex);
     Player nextTurnPlayer = getNextTurnPlayer(updatedBoard.lastUsedPit());
-    PartyState partyState = noStonesInHouses(updatedBoard) ? PartyState.FINISHED : state();
+    PartyState partyState = isNoStonesInHouses(updatedBoard) ? PartyState.FINISHED : state();
 
     return new Party(id, partyState, updatedBoard, nextTurnPlayer, version);
   }
@@ -49,7 +48,7 @@ public record Party(UUID id, PartyState state, Board board, Player playerTurn, i
     return playerTurn == Player.PLAYER_ONE ? Player.PLAYER_TWO : Player.PLAYER_ONE;
   }
 
-  private boolean noStonesInHouses(Board board) {
+  private boolean isNoStonesInHouses(Board board) {
     return 0
         == board.pits().stream()
             .filter(pit -> pit.type() == PitType.HOUSE)

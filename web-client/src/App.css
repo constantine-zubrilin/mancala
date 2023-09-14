@@ -1,0 +1,94 @@
+.App {
+  padding: 0 20%;
+}
+
+:root{
+  --player1-color: #00f0ff;
+  --player2-color: #ff003c;
+}
+
+.party-state-board {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  margin-top: 25px;
+}
+
+.party-state {
+  margin: 20px 0;
+}
+
+.pits {
+  display: flex;
+  flex-direction: row;
+}
+
+.player-1 {
+  color: var(--player1-color);
+}
+
+.player-2 {
+  color: var(--player2-color);
+}
+
+.pits-player-1 {
+  align-items: flex-start;
+  flex-direction: row-reverse;
+  margin-left: -60px;
+}
+.pits-player-2 {
+  align-items: flex-end;
+  margin-right: -60px;
+  margin-top: -120px;
+}
+.pit {
+  padding: 10px;
+  margin: 0 10px;
+  width: 20px;
+  height: 20px;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1;
+}
+
+.pit.pit-store {
+  height: 100px;
+}
+
+.pit-player-1 {
+  background-color: var(--player1-color);
+}
+
+.pit-player-2 {
+  background-color: var(--player2-color);
+}
+
+.pit-active {
+  cursor: pointer;
+}
+
+.pit-player-1.pit-active, .pit-player-2.pit-active {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.pit-player-1.pit-active:hover {
+  transform: translateX(-5px);
+  box-shadow: 5px 0 0 0 var(--purple);
+}
+.pit-player-2.pit-active:hover {
+  transform: translateX(5px);
+  box-shadow: -5px 0 0 0 var(--purple);
+}
+
+.App h1 {
+  text-align: center;
+  & span {
+    display: inline;
+  }
+  & .sub-h {
+    color: #00f0ff;
+    font-size: 20px;
+    position: absolute;
+  }
+}

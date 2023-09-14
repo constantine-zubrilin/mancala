@@ -1,5 +1,10 @@
 package me.zubrilincp.mankala.adapter.in.web;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import java.util.UUID;
 import lombok.AllArgsConstructor;
 import me.zubrilincp.mankala.adapter.in.web.request.PlayerMoveRequest;
@@ -25,13 +30,17 @@ import org.springframework.web.server.ResponseStatusException;
 @RequestMapping(
     value = {"/api/v1/party"},
     produces = {MediaType.APPLICATION_JSON_VALUE})
-// TODO: add openapi documentation
 @AllArgsConstructor
 public class PartyController {
 
   private final ManagePartyUseCase managePartyUseCase;
   private final PlayerMoveUseCase playerMoveUseCase;
 
+  @Operation(summary = "Create new game party")
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "201", description = "Party created",
+          content = { @Content(mediaType = "application/json",
+              schema = @Schema(implementation = Party.class)) }) })
   @PostMapping
   @ResponseStatus(HttpStatus.CREATED)
   @ResponseBody
@@ -43,6 +52,14 @@ public class PartyController {
     }
   }
 
+  @Operation(summary = "Fetch game party by id")
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "200", description = "Found party",
+          content = { @Content(mediaType = "application/json",
+              schema = @Schema(implementation = Party.class)) }),
+      @ApiResponse(responseCode = "404", description = "Party not found",
+          content = {@Content(mediaType = "application/json",
+          schema = @Schema(ref = "ErrorResponseSchema"))}) })
   @GetMapping("/{partyId}")
   @ResponseStatus(HttpStatus.OK)
   @ResponseBody
@@ -56,6 +73,17 @@ public class PartyController {
     }
   }
 
+  @Operation(summary = "Make a move in game party")
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "200", description = "Move made",
+          content = { @Content(mediaType = "application/json",
+              schema = @Schema(implementation = Party.class)) }),
+      @ApiResponse(responseCode = "403", description = "Move forbidden",
+          content = {@Content(mediaType = "application/json",
+              schema = @Schema(ref = "ErrorResponseSchema"))}),
+      @ApiResponse(responseCode = "404", description = "Party not found",
+          content = {@Content(mediaType = "application/json",
+              schema = @Schema(ref = "ErrorResponseSchema"))}) })
   @PostMapping("/{partyId}/move")
   @ResponseStatus(HttpStatus.OK)
   @ResponseBody
