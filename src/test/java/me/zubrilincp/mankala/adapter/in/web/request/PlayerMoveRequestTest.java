@@ -20,16 +20,13 @@ class PlayerMoveRequestTest {
 
   @Test
   void givenNullPlayer_whenCreatingPlayerMoveRequest_thenIllegalPlayerParamExceptionIsThrown() {
-    assertThrows(
-        IllegalPlayerParamException.class,
-        () -> new PlayerMoveRequest(null, 3));
+    assertThrows(IllegalPlayerParamException.class, () -> new PlayerMoveRequest(null, 3));
   }
 
   @Test
   void
       givenNegativePitIndex_whenCreatingPlayerMoveRequest_thenIllegalPitIndexParamExceptionIsThrown() {
     assertThrows(
-        IllegalPitIndexParamException.class,
-        () -> new PlayerMoveRequest(Player.PLAYER_TWO, -1));
+        IllegalPitIndexParamException.class, () -> new PlayerMoveRequest(Player.PLAYER_TWO, -1));
   }
 }
